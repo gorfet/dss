@@ -1,0 +1,1575 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Faculty Evaluation & Decision Support System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center">
+      <div class="bg-white rounded-xl shadow-lg p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-bold text-gray-800 mb-2">
+            Faculty Evaluation System
+          </h1>
+          <p class="text-gray-600">Please select your role to continue</p>
+        </div>
+
+        <div class="space-y-4">
+          <button
+            onclick="login('evaluator')"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              ></path>
+            </svg>
+            Faculty Evaluator
+          </button>
+
+          <button
+            onclick="login('admin')"
+            class="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-6 rounded-lg transition-colors flex items-center justify-center"
+          >
+            <svg
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              ></path>
+            </svg>
+            Administrator / HR
+          </button>
+        </div>
+
+        <div class="mt-6 text-center text-sm text-gray-500">
+          <p><strong>Evaluator:</strong> Submit faculty evaluations</p>
+          <p>
+            <strong>Administrator:</strong> View analytics and decision support
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainApp" class="hidden">
+      <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+          <div>
+            <h1 class="text-4xl font-bold text-gray-800 mb-2">
+              Faculty Evaluation System
+            </h1>
+            <p class="text-gray-600" id="roleDescription">
+              Comprehensive evaluation with intelligent decision support
+            </p>
+          </div>
+          <button
+            onclick="logout()"
+            class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded-lg transition-colors flex items-center"
+          >
+            <svg
+              class="w-4 h-4 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+              ></path>
+            </svg>
+            Logout
+          </button>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="flex justify-center mb-8">
+          <div class="bg-white rounded-lg shadow-md p-1" id="navigationTabs">
+            <!-- Tabs will be populated based on user role -->
+          </div>
+        </div>
+
+        <!-- Evaluation Form Tab (Evaluator Only) -->
+        <div id="evaluationTab" class="tab-content">
+          <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">
+              Faculty Performance Evaluation
+            </h2>
+
+            <form id="evaluationForm" class="space-y-6">
+              <!-- Basic Information -->
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Faculty Name</label
+                  >
+                  <input
+                    type="text"
+                    id="facultyName"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Enter faculty name"
+                    required
+                  />
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2"
+                    >Department</label
+                  >
+                  <select
+                    id="department"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    required
+                  >
+                    <option value="">Select Department</option>
+                    <option value="Computer Science">Computer Science</option>
+                    <option value="Mathematics">Mathematics</option>
+                    <option value="Physics">Physics</option>
+                    <option value="Chemistry">Chemistry</option>
+                    <option value="Biology">Biology</option>
+                    <option value="English">English</option>
+                    <option value="History">History</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Evaluation Criteria -->
+              <div class="space-y-6">
+                <h3 class="text-lg font-semibold text-gray-800">
+                  Evaluation Criteria (Rate 1-5)
+                </h3>
+
+                <!-- Teaching Performance -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                  <h4 class="font-medium text-gray-800 mb-4">
+                    Teaching Performance (40%)
+                  </h4>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Course Delivery Quality</label
+                      >
+                      <input
+                        type="range"
+                        id="courseDelivery"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('courseDelivery')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="courseDeliveryValue" class="font-medium"
+                          >3</span
+                        >
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Student Engagement</label
+                      >
+                      <input
+                        type="range"
+                        id="studentEngagement"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('studentEngagement')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="studentEngagementValue" class="font-medium"
+                          >3</span
+                        >
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Assessment Methods</label
+                      >
+                      <input
+                        type="range"
+                        id="assessment"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('assessment')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="assessmentValue" class="font-medium">3</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Student Feedback Score</label
+                      >
+                      <input
+                        type="range"
+                        id="studentFeedback"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('studentFeedback')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="studentFeedbackValue" class="font-medium"
+                          >3</span
+                        >
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Research Performance -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                  <h4 class="font-medium text-gray-800 mb-4">
+                    Research Performance (35%)
+                  </h4>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Publications Quality</label
+                      >
+                      <input
+                        type="range"
+                        id="publications"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('publications')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="publicationsValue" class="font-medium"
+                          >3</span
+                        >
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Grant Acquisition</label
+                      >
+                      <input
+                        type="range"
+                        id="grants"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('grants')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="grantsValue" class="font-medium">3</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Research Innovation</label
+                      >
+                      <input
+                        type="range"
+                        id="innovation"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('innovation')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="innovationValue" class="font-medium">3</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Collaboration</label
+                      >
+                      <input
+                        type="range"
+                        id="collaboration"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('collaboration')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="collaborationValue" class="font-medium"
+                          >3</span
+                        >
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Service Performance -->
+                <div class="bg-gray-50 p-6 rounded-lg">
+                  <h4 class="font-medium text-gray-800 mb-4">
+                    Service Performance (25%)
+                  </h4>
+                  <div class="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Administrative Duties</label
+                      >
+                      <input
+                        type="range"
+                        id="administrative"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('administrative')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="administrativeValue" class="font-medium"
+                          >3</span
+                        >
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Committee Participation</label
+                      >
+                      <input
+                        type="range"
+                        id="committee"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('committee')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="committeeValue" class="font-medium">3</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Community Outreach</label
+                      >
+                      <input
+                        type="range"
+                        id="outreach"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('outreach')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="outreachValue" class="font-medium">3</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                    <div>
+                      <label class="block text-sm text-gray-600 mb-2"
+                        >Professional Development</label
+                      >
+                      <input
+                        type="range"
+                        id="development"
+                        min="1"
+                        max="5"
+                        value="3"
+                        class="w-full"
+                        oninput="updateRatingDisplay('development')"
+                      />
+                      <div
+                        class="flex justify-between text-xs text-gray-500 mt-1"
+                      >
+                        <span>Poor</span>
+                        <span id="developmentValue" class="font-medium">3</span>
+                        <span>Excellent</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Comments -->
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2"
+                  >Additional Comments</label
+                >
+                <textarea
+                  id="comments"
+                  rows="4"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter any additional observations or comments..."
+                ></textarea>
+              </div>
+
+              <!-- Submit Button -->
+              <div class="text-center">
+                <button
+                  type="submit"
+                  class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-lg transition-colors"
+                >
+                  Submit Evaluation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Dashboard Tab (Admin Only) -->
+        <div id="dashboardTab" class="tab-content hidden">
+          <div class="max-w-6xl mx-auto space-y-8">
+            <!-- Summary Cards -->
+            <div class="grid md:grid-cols-4 gap-6">
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-gray-600">
+                      Total Evaluations
+                    </p>
+                    <p
+                      class="text-2xl font-bold text-gray-900"
+                      id="totalEvaluations"
+                    >
+                      0
+                    </p>
+                  </div>
+                  <div class="bg-blue-100 p-3 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-blue-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-gray-600">
+                      Average Score
+                    </p>
+                    <p
+                      class="text-2xl font-bold text-gray-900"
+                      id="averageScore"
+                    >
+                      0.0
+                    </p>
+                  </div>
+                  <div class="bg-green-100 p-3 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-green-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-gray-600">
+                      Top Performers
+                    </p>
+                    <p
+                      class="text-2xl font-bold text-gray-900"
+                      id="topPerformers"
+                    >
+                      0
+                    </p>
+                  </div>
+                  <div class="bg-yellow-100 p-3 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-yellow-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <p class="text-sm font-medium text-gray-600">
+                      Needs Improvement
+                    </p>
+                    <p
+                      class="text-2xl font-bold text-gray-900"
+                      id="needsImprovement"
+                    >
+                      0
+                    </p>
+                  </div>
+                  <div class="bg-red-100 p-3 rounded-full">
+                    <svg
+                      class="w-6 h-6 text-red-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                      ></path>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="grid md:grid-cols-2 gap-8">
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                  Performance Distribution
+                </h3>
+                <div class="h-80">
+                  <canvas id="performanceChart"></canvas>
+                </div>
+              </div>
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                  Department Comparison
+                </h3>
+                <div class="h-80">
+                  <canvas id="departmentChart"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Faculty List -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Recent Evaluations
+              </h3>
+              <div class="overflow-x-auto">
+                <table class="w-full">
+                  <thead>
+                    <tr class="border-b border-gray-200">
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Faculty Name
+                      </th>
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Department
+                      </th>
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Overall Score
+                      </th>
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Teaching
+                      </th>
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Research
+                      </th>
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Service
+                      </th>
+                      <th class="text-left py-3 px-4 font-medium text-gray-600">
+                        Status
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody id="facultyTableBody">
+                    <tr>
+                      <td colspan="7" class="text-center py-8 text-gray-500">
+                        No evaluations submitted yet
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Decision Support Tab (Admin Only) -->
+        <div id="decisionsTab" class="tab-content hidden">
+          <div class="max-w-6xl mx-auto space-y-8">
+            <!-- Decision Support Header -->
+            <div class="bg-white rounded-xl shadow-lg p-8">
+              <h2 class="text-2xl font-bold text-gray-800 mb-4">
+                Intelligent Decision Support
+              </h2>
+              <p class="text-gray-600">
+                AI-powered insights and recommendations based on faculty
+                evaluation data
+              </p>
+            </div>
+
+            <!-- Recommendations Grid -->
+            <div class="grid md:grid-cols-2 gap-8">
+              <!-- Promotion Recommendations -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-green-600 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    ></path>
+                  </svg>
+                  Promotion Candidates
+                </h3>
+                <div id="promotionCandidates" class="space-y-3">
+                  <p class="text-gray-500 text-sm">
+                    Submit evaluations to see promotion recommendations
+                  </p>
+                </div>
+              </div>
+
+              <!-- Development Needs -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-blue-600 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C20.832 18.477 19.246 18 17.5 18c-1.746 0-3.332.477-4.5 1.253"
+                    ></path>
+                  </svg>
+                  Development Opportunities
+                </h3>
+                <div id="developmentNeeds" class="space-y-3">
+                  <p class="text-gray-500 text-sm">
+                    Submit evaluations to see development recommendations
+                  </p>
+                </div>
+              </div>
+
+              <!-- Performance Alerts -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-red-600 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"
+                    ></path>
+                  </svg>
+                  Performance Alerts
+                </h3>
+                <div id="performanceAlerts" class="space-y-3">
+                  <p class="text-gray-500 text-sm">
+                    Submit evaluations to see performance alerts
+                  </p>
+                </div>
+              </div>
+
+              <!-- Strategic Insights -->
+              <div class="bg-white rounded-xl shadow-lg p-6">
+                <h3
+                  class="text-lg font-semibold text-gray-800 mb-4 flex items-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-purple-600 mr-2"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                    ></path>
+                  </svg>
+                  Strategic Insights
+                </h3>
+                <div id="strategicInsights" class="space-y-3">
+                  <p class="text-gray-500 text-sm">
+                    Submit evaluations to see strategic insights
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Items -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+              <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                Recommended Actions
+              </h3>
+              <div id="actionItems" class="space-y-4">
+                <p class="text-gray-500">
+                  Submit evaluations to generate personalized action
+                  recommendations
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Global variables
+      let evaluations =
+        JSON.parse(localStorage.getItem("facultyEvaluations")) || [];
+      let currentUser = null;
+      let performanceChart, departmentChart;
+
+      // Login functionality
+      function login(role) {
+        currentUser = role;
+        document.getElementById("loginScreen").classList.add("hidden");
+        document.getElementById("mainApp").classList.remove("hidden");
+
+        setupUserInterface(role);
+
+        if (role === "admin") {
+          updateDashboard();
+        }
+      }
+
+      // Logout functionality
+      function logout() {
+        currentUser = null;
+        document.getElementById("loginScreen").classList.remove("hidden");
+        document.getElementById("mainApp").classList.add("hidden");
+      }
+
+      // Setup user interface based on role
+      function setupUserInterface(role) {
+        const navigationTabs = document.getElementById("navigationTabs");
+        const roleDescription = document.getElementById("roleDescription");
+
+        if (role === "evaluator") {
+          roleDescription.textContent =
+            "Submit faculty performance evaluations";
+          navigationTabs.innerHTML = `
+                    <button onclick="showTab('evaluation')" id="evalTab" class="px-6 py-3 rounded-md font-medium transition-all bg-blue-600 text-white">
+                        Faculty Evaluation
+                    </button>
+                `;
+          showTab("evaluation");
+        } else if (role === "admin") {
+          roleDescription.textContent =
+            "View analytics and decision support dashboard";
+          navigationTabs.innerHTML = `
+                    <button onclick="showTab('dashboard')" id="dashTab" class="px-6 py-3 rounded-md font-medium transition-all bg-blue-600 text-white">
+                        Analytics Dashboard
+                    </button>
+                    <button onclick="showTab('decisions')" id="decisionTab" class="px-6 py-3 rounded-md font-medium transition-all text-gray-600 hover:text-blue-600">
+                        Decision Support
+                    </button>
+                `;
+          showTab("dashboard");
+        }
+      }
+
+      // Tab switching functionality
+      function showTab(tabName) {
+        // Hide all tabs
+        document.querySelectorAll(".tab-content").forEach((tab) => {
+          tab.classList.add("hidden");
+        });
+
+        // Remove active class from all tab buttons
+        document
+          .querySelectorAll('button[onclick^="showTab"]')
+          .forEach((btn) => {
+            btn.classList.remove("bg-blue-600", "text-white");
+            btn.classList.add("text-gray-600", "hover:text-blue-600");
+          });
+
+        // Show selected tab
+        document.getElementById(tabName + "Tab").classList.remove("hidden");
+
+        // Add active class to selected tab button
+        const activeBtn = document.getElementById(
+          tabName === "evaluation"
+            ? "evalTab"
+            : tabName === "dashboard"
+            ? "dashTab"
+            : "decisionTab"
+        );
+        if (activeBtn) {
+          activeBtn.classList.add("bg-blue-600", "text-white");
+          activeBtn.classList.remove("text-gray-600", "hover:text-blue-600");
+        }
+
+        // Update dashboard when switching to it
+        if (tabName === "dashboard") {
+          updateDashboard();
+        } else if (tabName === "decisions") {
+          updateDecisionSupport();
+        }
+      }
+
+      // Update rating display
+      function updateRatingDisplay(fieldId) {
+        const value = document.getElementById(fieldId).value;
+        document.getElementById(fieldId + "Value").textContent = value;
+      }
+
+      // Calculate weighted scores
+      function calculateScores(formData) {
+        // Teaching (40%)
+        const teachingScore =
+          (parseInt(formData.courseDelivery) +
+            parseInt(formData.studentEngagement) +
+            parseInt(formData.assessment) +
+            parseInt(formData.studentFeedback)) /
+          4;
+
+        // Research (35%)
+        const researchScore =
+          (parseInt(formData.publications) +
+            parseInt(formData.grants) +
+            parseInt(formData.innovation) +
+            parseInt(formData.collaboration)) /
+          4;
+
+        // Service (25%)
+        const serviceScore =
+          (parseInt(formData.administrative) +
+            parseInt(formData.committee) +
+            parseInt(formData.outreach) +
+            parseInt(formData.development)) /
+          4;
+
+        // Overall weighted score
+        const overallScore =
+          teachingScore * 0.4 + researchScore * 0.35 + serviceScore * 0.25;
+
+        return {
+          teaching: teachingScore,
+          research: researchScore,
+          service: serviceScore,
+          overall: overallScore,
+        };
+      }
+
+      // Form submission
+      document
+        .getElementById("evaluationForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+
+          const evaluation = {
+            id: Date.now(),
+            facultyName: document.getElementById("facultyName").value,
+            department: document.getElementById("department").value,
+            courseDelivery: document.getElementById("courseDelivery").value,
+            studentEngagement:
+              document.getElementById("studentEngagement").value,
+            assessment: document.getElementById("assessment").value,
+            studentFeedback: document.getElementById("studentFeedback").value,
+            publications: document.getElementById("publications").value,
+            grants: document.getElementById("grants").value,
+            innovation: document.getElementById("innovation").value,
+            collaboration: document.getElementById("collaboration").value,
+            administrative: document.getElementById("administrative").value,
+            committee: document.getElementById("committee").value,
+            outreach: document.getElementById("outreach").value,
+            development: document.getElementById("development").value,
+            comments: document.getElementById("comments").value,
+            date: new Date().toLocaleDateString(),
+            submittedBy: currentUser,
+          };
+
+          // Calculate scores
+          const scores = calculateScores(evaluation);
+          evaluation.scores = scores;
+
+          // Save evaluation
+          evaluations.push(evaluation);
+          localStorage.setItem(
+            "facultyEvaluations",
+            JSON.stringify(evaluations)
+          );
+
+          // Show success message
+          alert("Evaluation submitted successfully!");
+
+          // Reset form
+          this.reset();
+
+          // Reset all sliders to 3
+          document.querySelectorAll('input[type="range"]').forEach((slider) => {
+            slider.value = 3;
+            updateRatingDisplay(slider.id);
+          });
+        });
+
+      // Update dashboard
+      function updateDashboard() {
+        if (evaluations.length === 0) {
+          // Reset summary cards
+          document.getElementById("totalEvaluations").textContent = "0";
+          document.getElementById("averageScore").textContent = "0.0";
+          document.getElementById("topPerformers").textContent = "0";
+          document.getElementById("needsImprovement").textContent = "0";
+
+          // Clear charts
+          if (performanceChart) {
+            performanceChart.destroy();
+            performanceChart = null;
+          }
+          if (departmentChart) {
+            departmentChart.destroy();
+            departmentChart = null;
+          }
+
+          updateFacultyTable();
+          return;
+        }
+
+        // Update summary cards
+        document.getElementById("totalEvaluations").textContent =
+          evaluations.length;
+
+        const avgScore =
+          evaluations.reduce((sum, eval) => sum + eval.scores.overall, 0) /
+          evaluations.length;
+        document.getElementById("averageScore").textContent =
+          avgScore.toFixed(1);
+
+        const topPerformers = evaluations.filter(
+          (eval) => eval.scores.overall >= 4.0
+        ).length;
+        document.getElementById("topPerformers").textContent = topPerformers;
+
+        const needsImprovement = evaluations.filter(
+          (eval) => eval.scores.overall < 3.0
+        ).length;
+        document.getElementById("needsImprovement").textContent =
+          needsImprovement;
+
+        // Update faculty table
+        updateFacultyTable();
+
+        // Update charts
+        updateCharts();
+      }
+
+      // Update faculty table
+      function updateFacultyTable() {
+        const tbody = document.getElementById("facultyTableBody");
+
+        if (evaluations.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" class="text-center py-8 text-gray-500">No evaluations submitted yet</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = evaluations
+          .map((eval) => {
+            const statusClass =
+              eval.scores.overall >= 4.0
+                ? "bg-green-100 text-green-800"
+                : eval.scores.overall >= 3.0
+                ? "bg-yellow-100 text-yellow-800"
+                : "bg-red-100 text-red-800";
+            const statusText =
+              eval.scores.overall >= 4.0
+                ? "Excellent"
+                : eval.scores.overall >= 3.0
+                ? "Good"
+                : "Needs Improvement";
+
+            return `
+                    <tr class="border-b border-gray-100">
+                        <td class="py-3 px-4 font-medium text-gray-900">${
+                          eval.facultyName
+                        }</td>
+                        <td class="py-3 px-4 text-gray-600">${
+                          eval.department
+                        }</td>
+                        <td class="py-3 px-4 font-medium">${eval.scores.overall.toFixed(
+                          1
+                        )}</td>
+                        <td class="py-3 px-4">${eval.scores.teaching.toFixed(
+                          1
+                        )}</td>
+                        <td class="py-3 px-4">${eval.scores.research.toFixed(
+                          1
+                        )}</td>
+                        <td class="py-3 px-4">${eval.scores.service.toFixed(
+                          1
+                        )}</td>
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-1 text-xs font-medium rounded-full ${statusClass}">
+                                ${statusText}
+                            </span>
+                        </td>
+                    </tr>
+                `;
+          })
+          .join("");
+      }
+
+      // Update charts with proper error handling and responsive design
+      function updateCharts() {
+        // Destroy existing charts
+        if (performanceChart) {
+          performanceChart.destroy();
+          performanceChart = null;
+        }
+        if (departmentChart) {
+          departmentChart.destroy();
+          departmentChart = null;
+        }
+
+        // Performance distribution chart
+        const performanceCtx = document.getElementById("performanceChart");
+        if (performanceCtx) {
+          const excellent = evaluations.filter(
+            (e) => e.scores.overall >= 4.0
+          ).length;
+          const good = evaluations.filter(
+            (e) => e.scores.overall >= 3.0 && e.scores.overall < 4.0
+          ).length;
+          const fair = evaluations.filter(
+            (e) => e.scores.overall >= 2.0 && e.scores.overall < 3.0
+          ).length;
+          const poor = evaluations.filter((e) => e.scores.overall < 2.0).length;
+
+          performanceChart = new Chart(performanceCtx, {
+            type: "doughnut",
+            data: {
+              labels: [
+                "Excellent (4.0+)",
+                "Good (3.0-3.9)",
+                "Fair (2.0-2.9)",
+                "Poor (<2.0)",
+              ],
+              datasets: [
+                {
+                  data: [excellent, good, fair, poor],
+                  backgroundColor: ["#10B981", "#F59E0B", "#F97316", "#EF4444"],
+                  borderWidth: 2,
+                  borderColor: "#ffffff",
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              plugins: {
+                legend: {
+                  position: "bottom",
+                  labels: {
+                    padding: 20,
+                    usePointStyle: true,
+                  },
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const total = context.dataset.data.reduce(
+                        (a, b) => a + b,
+                        0
+                      );
+                      const percentage = (
+                        (context.parsed * 100) /
+                        total
+                      ).toFixed(1);
+                      return `${context.label}: ${context.parsed} (${percentage}%)`;
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+
+        // Department comparison chart
+        const departmentCtx = document.getElementById("departmentChart");
+        if (departmentCtx && evaluations.length > 0) {
+          const deptData = {};
+          evaluations.forEach((eval) => {
+            if (!deptData[eval.department]) {
+              deptData[eval.department] = {
+                scores: [],
+                count: 0,
+              };
+            }
+            deptData[eval.department].scores.push(eval.scores.overall);
+            deptData[eval.department].count++;
+          });
+
+          const deptLabels = Object.keys(deptData);
+          const deptAverages = deptLabels.map((dept) => {
+            const scores = deptData[dept].scores;
+            return (
+              scores.reduce((sum, score) => sum + score, 0) / scores.length
+            );
+          });
+          const deptCounts = deptLabels.map((dept) => deptData[dept].count);
+
+          departmentChart = new Chart(departmentCtx, {
+            type: "bar",
+            data: {
+              labels: deptLabels,
+              datasets: [
+                {
+                  label: "Average Score",
+                  data: deptAverages,
+                  backgroundColor: "#3B82F6",
+                  borderColor: "#1D4ED8",
+                  borderWidth: 1,
+                  borderRadius: 4,
+                  borderSkipped: false,
+                },
+              ],
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  max: 5,
+                  ticks: {
+                    stepSize: 0.5,
+                  },
+                  grid: {
+                    color: "#E5E7EB",
+                  },
+                },
+                x: {
+                  grid: {
+                    display: false,
+                  },
+                },
+              },
+              plugins: {
+                legend: {
+                  display: false,
+                },
+                tooltip: {
+                  callbacks: {
+                    label: function (context) {
+                      const deptIndex = context.dataIndex;
+                      const count = deptCounts[deptIndex];
+                      return [
+                        `Average Score: ${context.parsed.y.toFixed(2)}`,
+                        `Faculty Count: ${count}`,
+                      ];
+                    },
+                  },
+                },
+              },
+            },
+          });
+        }
+      }
+
+      // Update decision support
+      function updateDecisionSupport() {
+        if (evaluations.length === 0) return;
+
+        // Promotion candidates (overall score >= 4.0)
+        const promotionCandidates = evaluations.filter(
+          (eval) => eval.scores.overall >= 4.0
+        );
+        const promotionDiv = document.getElementById("promotionCandidates");
+
+        if (promotionCandidates.length === 0) {
+          promotionDiv.innerHTML =
+            '<p class="text-gray-500 text-sm">No promotion candidates identified</p>';
+        } else {
+          promotionDiv.innerHTML = promotionCandidates
+            .map(
+              (eval) => `
+                    <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <div class="font-medium text-green-800">${
+                          eval.facultyName
+                        }</div>
+                        <div class="text-sm text-green-600">${
+                          eval.department
+                        } • Score: ${eval.scores.overall.toFixed(1)}</div>
+                        <div class="text-xs text-green-500 mt-1">Strong performance across all areas</div>
+                    </div>
+                `
+            )
+            .join("");
+        }
+
+        // Development needs (scores < 3.0 in any area)
+        const developmentNeeds = evaluations.filter(
+          (eval) =>
+            eval.scores.teaching < 3.0 ||
+            eval.scores.research < 3.0 ||
+            eval.scores.service < 3.0
+        );
+        const developmentDiv = document.getElementById("developmentNeeds");
+
+        if (developmentNeeds.length === 0) {
+          developmentDiv.innerHTML =
+            '<p class="text-gray-500 text-sm">No immediate development needs identified</p>';
+        } else {
+          developmentDiv.innerHTML = developmentNeeds
+            .map((eval) => {
+              const weakAreas = [];
+              if (eval.scores.teaching < 3.0) weakAreas.push("Teaching");
+              if (eval.scores.research < 3.0) weakAreas.push("Research");
+              if (eval.scores.service < 3.0) weakAreas.push("Service");
+
+              return `
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                            <div class="font-medium text-blue-800">${
+                              eval.facultyName
+                            }</div>
+                            <div class="text-sm text-blue-600">${
+                              eval.department
+                            }</div>
+                            <div class="text-xs text-blue-500 mt-1">Focus areas: ${weakAreas.join(
+                              ", "
+                            )}</div>
+                        </div>
+                    `;
+            })
+            .join("");
+        }
+
+        // Performance alerts (overall score < 2.5)
+        const performanceAlerts = evaluations.filter(
+          (eval) => eval.scores.overall < 2.5
+        );
+        const alertsDiv = document.getElementById("performanceAlerts");
+
+        if (performanceAlerts.length === 0) {
+          alertsDiv.innerHTML =
+            '<p class="text-gray-500 text-sm">No performance alerts</p>';
+        } else {
+          alertsDiv.innerHTML = performanceAlerts
+            .map(
+              (eval) => `
+                    <div class="bg-red-50 border border-red-200 rounded-lg p-3">
+                        <div class="font-medium text-red-800">${
+                          eval.facultyName
+                        }</div>
+                        <div class="text-sm text-red-600">${
+                          eval.department
+                        } • Score: ${eval.scores.overall.toFixed(1)}</div>
+                        <div class="text-xs text-red-500 mt-1">Requires immediate attention and support</div>
+                    </div>
+                `
+            )
+            .join("");
+        }
+
+        // Strategic insights
+        const insights = generateStrategicInsights();
+        const insightsDiv = document.getElementById("strategicInsights");
+        insightsDiv.innerHTML = insights
+          .map(
+            (insight) => `
+                <div class="bg-purple-50 border border-purple-200 rounded-lg p-3">
+                    <div class="font-medium text-purple-800">${insight.title}</div>
+                    <div class="text-sm text-purple-600 mt-1">${insight.description}</div>
+                </div>
+            `
+          )
+          .join("");
+
+        // Action items
+        const actions = generateActionItems();
+        const actionsDiv = document.getElementById("actionItems");
+        actionsDiv.innerHTML = actions
+          .map(
+            (action, index) => `
+                <div class="flex items-start space-x-3 p-4 bg-gray-50 rounded-lg">
+                    <div class="flex-shrink-0 w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-medium">
+                        ${index + 1}
+                    </div>
+                    <div>
+                        <div class="font-medium text-gray-800">${
+                          action.title
+                        }</div>
+                        <div class="text-sm text-gray-600 mt-1">${
+                          action.description
+                        }</div>
+                        <div class="text-xs text-gray-500 mt-2">Priority: ${
+                          action.priority
+                        }</div>
+                    </div>
+                </div>
+            `
+          )
+          .join("");
+      }
+
+      // Generate strategic insights
+      function generateStrategicInsights() {
+        const insights = [];
+
+        if (evaluations.length === 0) return insights;
+
+        // Department performance analysis
+        const deptPerformance = {};
+        evaluations.forEach((eval) => {
+          if (!deptPerformance[eval.department]) {
+            deptPerformance[eval.department] = [];
+          }
+          deptPerformance[eval.department].push(eval.scores.overall);
+        });
+
+        const deptAverages = Object.keys(deptPerformance).map((dept) => ({
+          dept,
+          avg:
+            deptPerformance[dept].reduce((sum, score) => sum + score, 0) /
+            deptPerformance[dept].length,
+        }));
+
+        if (deptAverages.length > 1) {
+          const topDept = deptAverages.reduce((max, curr) =>
+            curr.avg > max.avg ? curr : max
+          );
+          const lowDept = deptAverages.reduce((min, curr) =>
+            curr.avg < min.avg ? curr : min
+          );
+
+          insights.push({
+            title: "Department Performance Gap",
+            description: `${topDept.dept} (${topDept.avg.toFixed(
+              1
+            )}) outperforms ${lowDept.dept} (${lowDept.avg.toFixed(1)}) by ${(
+              topDept.avg - lowDept.avg
+            ).toFixed(1)} points`,
+          });
+        }
+
+        // Research vs Teaching balance
+        const avgTeaching =
+          evaluations.reduce((sum, eval) => sum + eval.scores.teaching, 0) /
+          evaluations.length;
+        const avgResearch =
+          evaluations.reduce((sum, eval) => sum + eval.scores.research, 0) /
+          evaluations.length;
+
+        if (Math.abs(avgTeaching - avgResearch) > 0.5) {
+          const stronger = avgTeaching > avgResearch ? "teaching" : "research";
+          const weaker = avgTeaching > avgResearch ? "research" : "teaching";
+          insights.push({
+            title: "Teaching-Research Balance",
+            description: `Faculty show stronger ${stronger} performance. Consider initiatives to strengthen ${weaker} capabilities`,
+          });
+        }
+
+        return insights;
+      }
+
+      // Generate action items
+      function generateActionItems() {
+        const actions = [];
+
+        if (evaluations.length === 0) return actions;
+
+        // Check for low performers
+        const lowPerformers = evaluations.filter(
+          (eval) => eval.scores.overall < 3.0
+        );
+        if (lowPerformers.length > 0) {
+          actions.push({
+            title: "Performance Improvement Plans",
+            description: `Develop individualized improvement plans for ${lowPerformers.length} faculty member(s) scoring below 3.0`,
+            priority: "High",
+          });
+        }
+
+        // Check for promotion readiness
+        const promotionReady = evaluations.filter(
+          (eval) => eval.scores.overall >= 4.0
+        );
+        if (promotionReady.length > 0) {
+          actions.push({
+            title: "Promotion Review Process",
+            description: `Initiate promotion review for ${promotionReady.length} high-performing faculty member(s)`,
+            priority: "Medium",
+          });
+        }
+
+        // Check for training needs
+        const teachingWeakness = evaluations.filter(
+          (eval) => eval.scores.teaching < 3.0
+        ).length;
+        const researchWeakness = evaluations.filter(
+          (eval) => eval.scores.research < 3.0
+        ).length;
+
+        if (teachingWeakness > evaluations.length * 0.3) {
+          actions.push({
+            title: "Teaching Development Program",
+            description:
+              "Implement comprehensive teaching skills development program",
+            priority: "High",
+          });
+        }
+
+        if (researchWeakness > evaluations.length * 0.3) {
+          actions.push({
+            title: "Research Support Initiative",
+            description: "Enhance research support and mentoring programs",
+            priority: "High",
+          });
+        }
+
+        // General recommendations
+        actions.push({
+          title: "Regular Evaluation Cycle",
+          description:
+            "Establish quarterly evaluation reviews to track progress and provide timely feedback",
+          priority: "Medium",
+        });
+
+        return actions;
+      }
+
+      // Initialize on page load
+      document.addEventListener("DOMContentLoaded", function () {
+        // Initialize rating displays
+        document.querySelectorAll('input[type="range"]').forEach((slider) => {
+          updateRatingDisplay(slider.id);
+        });
+      });
+    </script>
+    <script>
+      (function () {
+        function c() {
+          var b = a.contentDocument || a.contentWindow.document;
+          if (b) {
+            var d = b.createElement("script");
+            d.innerHTML =
+              "window.__CF$cv$params={r:'971b7ba295f1fee8',t:'MTc1NTYyNTcxOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+            b.getElementsByTagName("head")[0].appendChild(d);
+          }
+        }
+        if (document.body) {
+          var a = document.createElement("iframe");
+          a.height = 1;
+          a.width = 1;
+          a.style.position = "absolute";
+          a.style.top = 0;
+          a.style.left = 0;
+          a.style.border = "none";
+          a.style.visibility = "hidden";
+          document.body.appendChild(a);
+          if ("loading" !== document.readyState) c();
+          else if (window.addEventListener)
+            document.addEventListener("DOMContentLoaded", c);
+          else {
+            var e = document.onreadystatechange || function () {};
+            document.onreadystatechange = function (b) {
+              e(b);
+              "loading" !== document.readyState &&
+                ((document.onreadystatechange = e), c());
+            };
+          }
+        }
+      })();
+    </script>
+  </body>
+</html>
