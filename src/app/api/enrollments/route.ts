@@ -39,8 +39,14 @@ export async function GET(req: Request) {
     where,
     include: {
       student: { include: { user: { select: { firstName: true, lastName: true, email: true } } } },
-      section: { include: { subject: true, schedules: true } },
-      semester: true,
+      section: {
+        include: {
+          subject: true,
+          schedules: true,
+          faculty: { include: { user: { select: { firstName: true, lastName: true } } } },
+        },
+      },
+      semester: { include: { schoolYear: true } },
       grade: true,
     },
     orderBy: { createdAt: "desc" },
